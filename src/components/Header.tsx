@@ -8,14 +8,9 @@ import {
   Moon, 
   ChevronDown, 
   ExternalLink, 
-  LogOut, 
   Wallet, 
   Trophy, 
-  Activity, 
-  Shield, 
   Layers, 
-  ArrowUpRight,
-  Sparkles,
   RefreshCw,
   Copy,
   Check
@@ -26,8 +21,6 @@ export const Header: React.FC = () => {
   const {
     theme,
     toggleTheme,
-    hudTheme,
-    setHudTheme,
     activePage,
     setActivePage,
     balance,
@@ -71,75 +64,63 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-app-border bg-app-card/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-40 w-full pt-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1360px] items-center justify-between px-4 sm:px-6 rounded-2xl bg-app-card/90 backdrop-blur-xl border border-app-border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
         
-        {/* Left: Brand Identity & Navigation */}
-        <div className="flex items-center gap-6">
-          
-          {/* Logo */}
+        {/* Left: Brand Wordmark (Facto style) */}
+        <div className="flex items-center gap-8">
           <button
             onClick={() => {
               setActivePage('landing');
               soundService.playClick();
             }}
-            className="flex items-center gap-2.5 group"
+            className="flex items-center gap-2 group text-left"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-rose-500 via-neon-cyan to-neon-purple p-0.5 shadow-rose-500/20 shadow-md group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-obsidian-950 rounded-[10px] flex items-center justify-center">
-                <Zap className="w-4 h-4 text-rose-500 fill-rose-500/30" />
-              </div>
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="font-extrabold text-xl tracking-tight font-sans text-app-fg flex items-center gap-1 leading-none">
-                RO<span className="text-rose-500">VA</span>
-                <span className="text-[10px] font-mono text-neutral-400 font-normal">™</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-extrabold text-2xl tracking-[-0.04em] font-sans text-app-fg">
+                ROVA
               </span>
-              <span className="text-[9px] font-mono text-neon-green tracking-widest uppercase font-bold mt-1 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
-                PREDICTION PROTOCOL
-              </span>
+              <span className="w-2 h-2 rounded-full bg-facto-pink group-hover:scale-125 transition-transform" />
             </div>
           </button>
 
           {/* Nav Tabs */}
-          <nav className="hidden md:flex items-center gap-1 bg-app-elev/80 border border-app-border-subtle p-1 rounded-xl">
+          <nav className="hidden md:flex items-center gap-1">
             <button
               onClick={() => {
                 setActivePage('landing');
                 soundService.playClick();
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
                 activePage === 'landing'
-                  ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30 shadow-xs'
-                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+                  ? 'bg-app-fg text-app-bg font-semibold shadow-xs'
+                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-              <span>3D Hub</span>
+              Overview
             </button>
             <button
               onClick={() => {
                 setActivePage('trade');
                 soundService.playClick();
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
                 activePage === 'trade'
-                  ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
-                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+                  ? 'bg-app-fg text-app-bg font-semibold shadow-xs'
+                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev'
               }`}
             >
-              Terminal
+              Trade Terminal
             </button>
             <button
               onClick={() => {
                 setActivePage('positions');
                 soundService.playClick();
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
                 activePage === 'positions'
-                  ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
-                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+                  ? 'bg-app-fg text-app-bg font-semibold shadow-xs'
+                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev'
               }`}
             >
               Positions
@@ -149,78 +130,28 @@ export const Header: React.FC = () => {
                 setActivePage('leaderboard');
                 soundService.playClick();
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
                 activePage === 'leaderboard'
-                  ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
-                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+                  ? 'bg-app-fg text-app-bg font-semibold shadow-xs'
+                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev'
               }`}
             >
               Reward Pool ($1,000)
             </button>
           </nav>
-
         </div>
 
-        {/* Right: Controls, 3D HUD, Theme Switcher, Balance, Wallet */}
+        {/* Right: Balance, Controls, Wallet (Facto styling) */}
         <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* Global 3D HUD Palette Switcher */}
-          <div className="hidden lg:flex items-center gap-1 bg-app-elev/90 border border-app-border-subtle p-1 rounded-xl text-[11px] font-mono">
-            <span className="text-app-fg-dim px-1.5 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-rose-500" />
-              <span>3D:</span>
-            </span>
-            {(['crimson', 'cyan', 'purple', 'emerald'] as const).map((scheme) => (
-              <button
-                key={scheme}
-                onClick={() => {
-                  setHudTheme(scheme);
-                  soundService.playClick();
-                }}
-                className={`px-2 py-0.5 rounded-lg transition-all capitalize font-medium ${
-                  hudTheme === scheme
-                    ? scheme === 'crimson'
-                      ? 'bg-rose-600 text-white font-bold shadow-xs'
-                      : scheme === 'cyan'
-                      ? 'bg-cyan-500 text-black font-bold shadow-xs'
-                      : scheme === 'purple'
-                      ? 'bg-purple-600 text-white font-bold shadow-xs'
-                      : 'bg-emerald-500 text-black font-bold shadow-xs'
-                    : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
-                }`}
-                title={`Switch 3D Scene to ${scheme}`}
-              >
-                {scheme === 'crimson' ? '🔴' : scheme === 'cyan' ? '🔵' : scheme === 'purple' ? '🟣' : '🟢'}
-              </button>
-            ))}
-          </div>
-
-          {/* Theme Switcher */}
-          <button
-            onClick={toggleTheme}
-            className="h-9 w-9 rounded-xl border border-app-border bg-app-elev text-app-fg-muted hover:text-app-fg hover:border-app-accent/40 flex items-center justify-center transition-colors"
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
-          </button>
-
-          {/* Sound Toggle */}
-          <button
-            onClick={toggleMute}
-            className="h-9 w-9 rounded-xl border border-app-border bg-app-elev text-app-fg-muted hover:text-app-fg hover:border-app-accent/40 flex items-center justify-center transition-colors"
-            title={isMuted ? "Unmute Sound" : "Mute Sound"}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-neon-cyan" />}
-          </button>
-
-          {/* USDG Balance Card */}
+          {/* USDG Live Balance Pill */}
           <div className="flex items-center gap-1">
             <button
               onClick={openDeposit}
-              className="flex h-9 items-center gap-2 rounded-xl border border-neon-cyan/30 bg-neon-cyan/5 px-3 hover:bg-neon-cyan/10 transition-colors"
+              className="flex h-10 items-center gap-2 rounded-xl border border-app-border bg-app-elev px-3.5 hover:bg-app-elev-2 transition-colors"
               title="Click to Deposit / Manage USDG Collateral"
             >
-              <span className="text-[11px] font-mono uppercase text-neon-cyan font-bold tracking-wider">USDG</span>
+              <span className="text-xs font-mono uppercase text-facto-pink font-bold">USDG</span>
               <span className="font-mono font-bold text-xs sm:text-sm text-app-fg">
                 ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
@@ -234,29 +165,47 @@ export const Header: React.FC = () => {
                   setTimeout(() => setIsRefreshing(false), 800);
                 }}
                 disabled={isRefreshing}
-                className="h-9 w-8 flex items-center justify-center rounded-xl border border-app-border bg-app-elev hover:border-neon-cyan/40 text-app-fg-muted hover:text-neon-cyan transition-colors"
+                className="h-10 w-9 flex items-center justify-center rounded-xl border border-app-border bg-app-elev hover:bg-app-elev-2 text-app-fg-muted hover:text-app-fg transition-colors"
                 title="Refresh Live On-Chain Balance"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-neon-cyan' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-facto-pink' : ''}`} />
               </button>
             )}
           </div>
+
+          {/* Theme Switcher */}
+          <button
+            onClick={toggleTheme}
+            className="h-10 w-10 rounded-xl border border-app-border bg-app-elev text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2 flex items-center justify-center transition-colors"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+          </button>
+
+          {/* Sound Toggle */}
+          <button
+            onClick={toggleMute}
+            className="h-10 w-10 rounded-xl border border-app-border bg-app-elev text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2 flex items-center justify-center transition-colors"
+            title={isMuted ? "Unmute Sound" : "Mute Sound"}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-app-fg" />}
+          </button>
 
           {/* Wallet Menu */}
           <div className="relative" ref={dropdownRef}>
             {isWalletConnected ? (
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex h-9 items-center gap-2 rounded-xl border border-app-border bg-app-elev px-2.5 hover:border-app-accent/40 transition-colors"
+                className="flex h-10 items-center gap-2 rounded-xl border border-app-border bg-app-elev px-3 hover:bg-app-elev-2 transition-colors font-mono text-xs text-app-fg font-medium"
               >
-                <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
-                <span className="font-mono text-xs text-app-fg font-medium">{walletAddress}</span>
+                <div className="w-2 h-2 rounded-full bg-facto-green animate-pulse" />
+                <span>{walletAddress}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-app-fg-dim" />
               </button>
             ) : (
               <button
                 onClick={connectWallet}
-                className="btn-cyber flex h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-neon-cyan to-app-accent px-4 text-xs font-bold text-obsidian-950 shadow-neon-cyan/20 shadow-md"
+                className="facto-btn-dark h-10 py-0 px-4 text-sm"
               >
                 <Wallet className="w-3.5 h-3.5" />
                 <span>Connect</span>
@@ -265,8 +214,8 @@ export const Header: React.FC = () => {
 
             {/* Profile Dropdown */}
             {isDropdownOpen && isWalletConnected && (
-              <div className="absolute right-0 z-40 mt-2 w-[280px] rounded-2xl border border-app-border bg-app-card p-2.5 shadow-card-glow animate-enter">
-                <div className="mb-2 p-2.5 rounded-xl bg-app-elev border border-app-border-subtle">
+              <div className="absolute right-0 z-50 mt-2 w-[280px] rounded-2xl border border-app-border bg-app-card p-3 shadow-xl animate-enter">
+                <div className="mb-2 p-3 rounded-xl bg-app-elev border border-app-border-subtle">
                   <div className="flex items-center justify-between text-[10px] uppercase font-mono text-app-fg-dim">
                     <span>Connected Wallet</span>
                     <button
@@ -277,9 +226,9 @@ export const Header: React.FC = () => {
                         soundService.playClick();
                         setTimeout(() => setCopiedAddr(false), 2000);
                       }}
-                      className="text-neon-cyan hover:underline flex items-center gap-1"
+                      className="text-facto-pink hover:underline flex items-center gap-1 font-semibold"
                     >
-                      {copiedAddr ? <Check className="w-3 h-3 text-neon-green" /> : <Copy className="w-3 h-3" />}
+                      {copiedAddr ? <Check className="w-3 h-3 text-facto-green" /> : <Copy className="w-3 h-3" />}
                       <span>{copiedAddr ? 'Copied' : 'Copy'}</span>
                     </button>
                   </div>
@@ -287,8 +236,8 @@ export const Header: React.FC = () => {
                     {fullWalletAddress || walletAddress}
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-app-border/40">
-                    <span className="font-mono text-[11px] text-app-fg-muted">Wallet Balance:</span>
-                    <span className="font-mono text-xs font-bold text-neon-cyan">
+                    <span className="font-mono text-[11px] text-app-fg-muted">Balance:</span>
+                    <span className="font-mono text-xs font-bold text-facto-green">
                       ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDG
                     </span>
                   </div>
@@ -325,7 +274,7 @@ export const Header: React.FC = () => {
                     className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-app-fg-muted hover:text-app-fg hover:bg-app-elev transition-colors"
                   >
                     <span>Deposit / Testnet Faucet</span>
-                    <span className="text-[10px] bg-neon-green/10 text-neon-green font-bold px-1.5 py-0.5 rounded font-mono">+USDG</span>
+                    <span className="text-[10px] bg-facto-green/10 text-facto-green font-bold px-1.5 py-0.5 rounded font-mono">+USDG</span>
                   </button>
 
                   <button
@@ -355,10 +304,9 @@ export const Header: React.FC = () => {
                       disconnectWallet();
                       setIsDropdownOpen(false);
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-neon-red hover:bg-neon-red/10 transition-colors"
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-facto-red hover:bg-facto-red/10 transition-colors"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Disconnect</span>
+                    Disconnect Wallet
                   </button>
                 </div>
               </div>

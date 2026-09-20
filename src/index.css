@@ -3,43 +3,46 @@
 @tailwind utilities;
 
 :root {
-  /* Default: Obsidian 3D Cyber Dark */
-  --app-bg: #050608;
-  --app-card: rgba(10, 14, 23, 0.78);
-  --app-elev: rgba(16, 23, 38, 0.82);
-  --app-elev-2: rgba(24, 34, 54, 0.88);
-  --app-border: rgba(255, 255, 255, 0.09);
-  --app-border-subtle: rgba(255, 255, 255, 0.05);
-  --app-fg: #f3f6fc;
-  --app-fg-muted: #8b9bb4;
-  --app-fg-dim: #54647c;
-  --app-up: #00e599;
+  /* Facto Light Palette (Default) */
+  --page-surface: #f4f4f4;
+  --app-bg: #f4f4f4;
+  --app-card: #ffffff;
+  --app-elev: #f0f0f0;
+  --app-elev-2: #e8e8e8;
+  --app-border: #e6eded;
+  --app-border-subtle: #eeeeee;
+  --app-fg: #0d0e11;
+  --app-fg-muted: #646464;
+  --app-fg-dim: #0d0e1180;
+  --app-up: #008638;
   --app-down: #ff3b57;
-  --app-accent: #00d4ff;
-  color-scheme: dark;
+  --app-accent: #f243ac;
+  color-scheme: light;
 }
 
-.light {
-  /* Light: Alpine Luxury */
-  --app-bg: #f5f7fa;
-  --app-card: #ffffff;
-  --app-elev: #eef2f6;
-  --app-elev-2: #e2e8f0;
-  --app-border: #e2e8f0;
-  --app-border-subtle: #edf2f7;
-  --app-fg: #0f172a;
-  --app-fg-muted: #475569;
-  --app-fg-dim: #94a3b8;
-  --app-up: #10b981;
-  --app-down: #f43f5e;
-  --app-accent: #0284c7;
-  color-scheme: light;
+.dark {
+  /* Facto Obsidian Dark Palette */
+  --page-surface: #0a0b0e;
+  --app-bg: #0d0e11;
+  --app-card: #13151b;
+  --app-elev: #1a1d24;
+  --app-elev-2: #222630;
+  --app-border: #232730;
+  --app-border-subtle: #191c22;
+  --app-fg: #f5f6f8;
+  --app-fg-muted: #9aa0a6;
+  --app-fg-dim: #6e7681;
+  --app-up: #00e599;
+  --app-down: #ff4d6d;
+  --app-accent: #f243ac;
+  color-scheme: dark;
 }
 
 html, body {
   background-color: var(--app-bg);
   color: var(--app-fg);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.015em;
   overflow-x: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -48,14 +51,96 @@ html, body {
   font-family: 'Geist Mono', ui-monospace, monospace;
 }
 
-/* Glassmorphic card styling */
-.glass-panel {
+/* Facto Card Panel */
+.facto-panel {
   background: var(--app-card);
   border: 1px solid var(--app-border);
-  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-/* Custom scrollbars */
+.facto-panel-elevated {
+  background: var(--app-card);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(13, 14, 17, 0.06);
+}
+
+/* Facto Precision Buttons */
+.facto-btn-dark {
+  background-color: #0d0e11;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.facto-btn-dark:hover {
+  background-color: #23262d;
+  transform: translateY(-1px);
+}
+.facto-btn-dark:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.facto-btn-pink {
+  background-color: #f243ac;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 6px 20px rgba(242, 67, 172, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.facto-btn-pink:hover {
+  background-color: #ff4ca0;
+  transform: translateY(-1px);
+}
+.facto-btn-pink:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.facto-btn-light {
+  background-color: #ffffff;
+  color: #0d0e11;
+  border: 1px solid #d5d5d5;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.facto-btn-light:hover {
+  background-color: #f7f7f7;
+  border-color: #b0b0b0;
+  transform: translateY(-1px);
+}
+.facto-btn-light:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Clean Custom Scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -64,55 +149,25 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Laser strike animations */
-@keyframes laserGlowGreen {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(0, 229, 153, 0.4), inset 0 0 10px rgba(0, 229, 153, 0.2);
-    border-color: rgba(0, 229, 153, 0.8);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(0, 229, 153, 0.7), inset 0 0 15px rgba(0, 229, 153, 0.35);
-    border-color: #00e599;
-  }
-}
-
-.laser-glow-up {
-  animation: laserGlowGreen 2s ease-in-out infinite;
-}
-
-@keyframes laserGlowRed {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(255, 59, 87, 0.4), inset 0 0 10px rgba(255, 59, 87, 0.2);
-    border-color: rgba(255, 59, 87, 0.8);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(255, 59, 87, 0.7), inset 0 0 15px rgba(255, 59, 87, 0.35);
-    border-color: #ff3b57;
-  }
-}
-
-.laser-glow-down {
-  animation: laserGlowRed 2s ease-in-out infinite;
-}
-
-/* Interactive button tactile feel */
-.btn-cyber {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-.btn-cyber:hover {
-  transform: translateY(-1px);
-}
-.btn-cyber:active {
-  transform: scale(0.98);
-}
-
-/* Pop in animation */
-@keyframes enterAnim {
-  0% { opacity: 0; transform: translateY(6px); }
+/* Subtle Entry Animation */
+@keyframes enterSmooth {
+  0% { opacity: 0; transform: translateY(8px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 .animate-enter {
-  animation: enterAnim 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: enterSmooth 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Partner Logo Marquee */
+@keyframes marqueeFacto {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeFacto 22s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

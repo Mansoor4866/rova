@@ -8,24 +8,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Dark Obsidian Theme Tokens
-        obsidian: {
-          950: '#07090e',
-          900: '#0a0d14',
-          800: '#111622',
-          700: '#171e2e',
-          600: '#1f283d',
-          500: '#2b3650',
-        },
-        // Neon Accents
-        neon: {
-          green: '#00e599',
-          'green-glow': '#00ffaa',
+        // Facto Neo-Fintech Tokens
+        facto: {
+          pink: '#f243ac',
+          pinkHover: '#ff4ca0',
+          dark: '#0d0e11',
+          surface: '#f4f4f4',
+          card: '#ffffff',
+          border: '#e6eded',
+          borderSubtle: '#eeeeee',
+          green: '#008638',
+          greenLight: '#58e78f',
           red: '#ff3b57',
-          'red-glow': '#ff526d',
-          cyan: '#00d4ff',
-          amber: '#ffb800',
-          purple: '#9d4edd',
+          gray: '#646464',
+          grayLight: '#0d0e1180',
         },
         // Dynamic CSS Var references for theme switching
         app: {
@@ -44,7 +40,7 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Manrope', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
