@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default: Obsidian Dark */
+  --app-bg: #07090e;
+  --app-card: #0d121c;
+  --app-elev: #131b2a;
+  --app-elev-2: #1b263b;
+  --app-border: #1e2a40;
+  --app-border-subtle: #162032;
+  --app-fg: #f3f6fc;
+  --app-fg-muted: #8b9bb4;
+  --app-fg-dim: #54647c;
+  --app-up: #00e599;
+  --app-down: #ff3b57;
+  --app-accent: #00d4ff;
+  color-scheme: dark;
+}
+
+.light {
+  /* Light: Alpine Luxury */
+  --app-bg: #f5f7fa;
+  --app-card: #ffffff;
+  --app-elev: #eef2f6;
+  --app-elev-2: #e2e8f0;
+  --app-border: #e2e8f0;
+  --app-border-subtle: #edf2f7;
+  --app-fg: #0f172a;
+  --app-fg-muted: #475569;
+  --app-fg-dim: #94a3b8;
+  --app-up: #10b981;
+  --app-down: #f43f5e;
+  --app-accent: #0284c7;
+  color-scheme: light;
+}
+
+html, body {
+  background-color: var(--app-bg);
+  color: var(--app-fg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+}
+
+/* Glassmorphic card styling */
+.glass-panel {
+  background: var(--app-card);
+  border: 1px solid var(--app-border);
+  backdrop-filter: blur(12px);
+}
+
+/* Custom scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Laser strike animations */
+@keyframes laserGlowGreen {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 229, 153, 0.4), inset 0 0 10px rgba(0, 229, 153, 0.2);
+    border-color: rgba(0, 229, 153, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 229, 153, 0.7), inset 0 0 15px rgba(0, 229, 153, 0.35);
+    border-color: #00e599;
+  }
+}
+
+.laser-glow-up {
+  animation: laserGlowGreen 2s ease-in-out infinite;
+}
+
+@keyframes laserGlowRed {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 59, 87, 0.4), inset 0 0 10px rgba(255, 59, 87, 0.2);
+    border-color: rgba(255, 59, 87, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 59, 87, 0.7), inset 0 0 15px rgba(255, 59, 87, 0.35);
+    border-color: #ff3b57;
+  }
+}
+
+.laser-glow-down {
+  animation: laserGlowRed 2s ease-in-out infinite;
+}
+
+/* Interactive button tactile feel */
+.btn-cyber {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.btn-cyber:hover {
+  transform: translateY(-1px);
+}
+.btn-cyber:active {
+  transform: scale(0.98);
+}
+
+/* Pop in animation */
+@keyframes enterAnim {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-enter {
+  animation: enterAnim 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
