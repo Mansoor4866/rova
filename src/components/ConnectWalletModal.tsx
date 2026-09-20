@@ -10,10 +10,7 @@ interface ConnectWalletModalProps {
 }
 
 export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, onClose }) => {
-  const { setWalletAddress, setIsWalletConnected } = useTrading() as unknown as {
-    setWalletAddress: (addr: string) => void;
-    setIsWalletConnected: (connected: boolean) => void;
-  };
+  const { setWalletAddress, setIsWalletConnected } = useTrading();
 
   const [connectingWallet, setConnectingWallet] = useState<WalletOption | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -36,7 +33,8 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
     try {
       const res = await web3WalletService.connect(wallet.id);
       if (res.success && res.address) {
-        setWalletAddress(res.address.slice(0, 6) + '...' + res.address.slice(-4));
+        const shortAddr = res.address.slice(0, 6) + '...' + res.address.slice(-4);
+        setWalletAddress(shortAddr, res.address);
         setIsWalletConnected(true);
         soundService.playWin();
         onClose();
@@ -54,7 +52,8 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
     soundService.playClick();
     setTimeout(() => {
       const mockAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-      setWalletAddress(mockAddr.slice(0, 6) + '...' + mockAddr.slice(-4));
+      const shortAddr = mockAddr.slice(0, 6) + '...' + mockAddr.slice(-4);
+      setWalletAddress(shortAddr, mockAddr);
       setIsWalletConnected(true);
       soundService.playWin();
       setShowQrCode(false);

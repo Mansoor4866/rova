@@ -11,11 +11,14 @@ import {
   LogOut, 
   Wallet, 
   Trophy, 
-  Activity,
-  Shield,
-  Layers,
+  Activity, 
+  Shield, 
+  Layers, 
   ArrowUpRight,
-  Sparkles
+  Sparkles,
+  RefreshCw,
+  Copy,
+  Check
 } from 'lucide-react';
 import { soundService } from '../services/soundService';
 
@@ -32,11 +35,15 @@ export const Header: React.FC = () => {
     setWalletModalTab,
     isWalletConnected,
     walletAddress,
+    fullWalletAddress,
+    refreshBalance,
     connectWallet,
     disconnectWallet
   } = useTrading();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [copiedAddr, setCopiedAddr] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -174,15 +181,33 @@ export const Header: React.FC = () => {
           </button>
 
           {/* USDG Balance Card */}
-          <button
-            onClick={openDeposit}
-            className="flex h-9 items-center gap-2.5 rounded-xl border border-neon-cyan/30 bg-neon-cyan/5 px-3 hover:bg-neon-cyan/10 transition-colors"
-          >
-            <span className="text-[11px] font-mono uppercase text-neon-cyan font-bold tracking-wider">USDG</span>
-            <span className="font-mono font-bold text-xs sm:text-sm text-app-fg">
-              ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </span>
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={openDeposit}
+              className="flex h-9 items-center gap-2 rounded-xl border border-neon-cyan/30 bg-neon-cyan/5 px-3 hover:bg-neon-cyan/10 transition-colors"
+              title="Click to Deposit / Manage USDG Collateral"
+            >
+              <span className="text-[11px] font-mono uppercase text-neon-cyan font-bold tracking-wider">USDG</span>
+              <span className="font-mono font-bold text-xs sm:text-sm text-app-fg">
+                ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </button>
+            {isWalletConnected && (
+              <button
+                onClick={async () => {
+                  setIsRefreshing(true);
+                  soundService.playClick();
+                  await refreshBalance();
+                  setTimeout(() => setIsRefreshing(false), 800);
+                }}
+                disabled={isRefreshing}
+                className="h-9 w-8 flex items-center justify-center rounded-xl border border-app-border bg-app-elev hover:border-neon-cyan/40 text-app-fg-muted hover:text-neon-cyan transition-colors"
+                title="Refresh Live On-Chain Balance"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-neon-cyan' : ''}`} />
+              </button>
+            )}
+          </div>
 
           {/* Wallet Menu */}
           <div className="relative" ref={dropdownRef}>
@@ -207,11 +232,33 @@ export const Header: React.FC = () => {
 
             {/* Profile Dropdown */}
             {isDropdownOpen && isWalletConnected && (
-              <div className="absolute right-0 z-40 mt-2 w-[270px] rounded-2xl border border-app-border bg-app-card p-2.5 shadow-card-glow animate-enter">
+              <div className="absolute right-0 z-40 mt-2 w-[280px] rounded-2xl border border-app-border bg-app-card p-2.5 shadow-card-glow animate-enter">
                 <div className="mb-2 p-2.5 rounded-xl bg-app-elev border border-app-border-subtle">
-                  <span className="text-[10px] uppercase font-mono text-app-fg-dim block">Connected Wallet</span>
-                  <div className="font-mono text-xs font-bold text-app-fg truncate mt-0.5">{walletAddress}</div>
-                  <div className="font-mono text-[11px] text-neon-cyan font-semibold mt-1">Robinhood Chain (4663)</div>
+                  <div className="flex items-center justify-between text-[10px] uppercase font-mono text-app-fg-dim">
+                    <span>Connected Wallet</span>
+                    <button
+                      onClick={() => {
+                        const addrToCopy = fullWalletAddress || walletAddress || '';
+                        navigator.clipboard.writeText(addrToCopy);
+                        setCopiedAddr(true);
+                        soundService.playClick();
+                        setTimeout(() => setCopiedAddr(false), 2000);
+                      }}
+                      className="text-neon-cyan hover:underline flex items-center gap-1"
+                    >
+                      {copiedAddr ? <Check className="w-3 h-3 text-neon-green" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedAddr ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+                  <div className="font-mono text-xs font-bold text-app-fg truncate mt-0.5">
+                    {fullWalletAddress || walletAddress}
+                  </div>
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-app-border/40">
+                    <span className="font-mono text-[11px] text-app-fg-muted">Wallet Balance:</span>
+                    <span className="font-mono text-xs font-bold text-neon-cyan">
+                      ${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDG
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-1 text-xs">

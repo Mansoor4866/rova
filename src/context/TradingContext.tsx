@@ -3,6 +3,7 @@ import { Asset, Position, Direction, LeaderboardEntry, PlatformStats, ActivePage
 import { INITIAL_ASSETS, priceFeedService } from '../services/priceFeed';
 import { soundService } from '../services/soundService';
 import { supabaseService, isSupabaseConfigured } from '../services/supabase';
+import { web3WalletService } from '../services/web3Wallet';
 import confetti from 'canvas-confetti';
 
 interface TradingContextType {
@@ -40,7 +41,9 @@ interface TradingContextType {
   isWalletConnected: boolean;
   setIsWalletConnected: (connected: boolean) => void;
   walletAddress: string | null;
-  setWalletAddress: (addr: string | null) => void;
+  fullWalletAddress: string | null;
+  setWalletAddress: (addr: string | null, fullAddr?: string | null) => void;
+  refreshBalance: () => Promise<void>;
   connectWallet: () => void;
   disconnectWallet: () => void;
   isDatabaseConnected: boolean;
@@ -62,10 +65,18 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const durations = [15, 30, 60, 300, 600];
   const payoutMultiplier = 1.90;
 
-  const [balance, setBalance] = useState<number>(() => {
-    const saved = localStorage.getItem('rova_balance');
-    return saved ? parseFloat(saved) : 1000.0;
+  // Wallet & Balance State
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(() => {
+    return localStorage.getItem('rova_wallet_connected') === 'true';
   });
+  const [walletAddress, setWalletAddressState] = useState<string | null>(() => {
+    return localStorage.getItem('rova_wallet_display') || null;
+  });
+  const [fullWalletAddress, setFullWalletAddress] = useState<string | null>(() => {
+    return localStorage.getItem('rova_wallet_full') || null;
+  });
+
+  const [balance, setBalance] = useState<number>(0);
 
   const [activePositions, setActivePositions] = useState<Position[]>([]);
   const [settledPositions, setSettledPositions] = useState<Position[]>(() => {
@@ -78,8 +89,6 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [walletModalTab, setWalletModalTab] = useState<'deposit' | 'withdraw'>('deposit');
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [isDatabaseConnected] = useState(isSupabaseConfigured);
 
   const [stats, setStats] = useState<PlatformStats>({
@@ -103,14 +112,116 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     { rank: 5, address: '0x10ae...49fb', username: 'LaserStrike', volume: 6900, pnl: 1740, winRate: 63.4, prize: 100 },
   ]);
 
-  // Sync Supabase user & positions when wallet changes
-  useEffect(() => {
-    if (walletAddress) {
-      supabaseService.syncUser(walletAddress, balance).then(user => {
-        setBalance(user.balance);
-      });
+  // Set wallet address helper
+  const setWalletAddress = useCallback((addr: string | null, fullAddr?: string | null) => {
+    if (addr && fullAddr) {
+      setWalletAddressState(addr);
+      setFullWalletAddress(fullAddr);
+      setIsWalletConnected(true);
+      localStorage.setItem('rova_wallet_display', addr);
+      localStorage.setItem('rova_wallet_full', fullAddr);
+      localStorage.setItem('rova_wallet_connected', 'true');
+    } else if (addr) {
+      setWalletAddressState(addr);
+      setFullWalletAddress(addr);
+      setIsWalletConnected(true);
+      localStorage.setItem('rova_wallet_display', addr);
+      localStorage.setItem('rova_wallet_full', addr);
+      localStorage.setItem('rova_wallet_connected', 'true');
+    } else {
+      setWalletAddressState(null);
+      setFullWalletAddress(null);
+      setIsWalletConnected(false);
+      localStorage.removeItem('rova_wallet_display');
+      localStorage.removeItem('rova_wallet_full');
+      localStorage.removeItem('rova_wallet_connected');
+    }
+  }, []);
 
-      supabaseService.fetchUserPositions(walletAddress).then(dbPositions => {
+  // Fetch real USDG balance on-chain
+  const refreshBalance = useCallback(async () => {
+    const targetAddress = fullWalletAddress || walletAddress;
+    if (!targetAddress) {
+      setBalance(0);
+      return;
+    }
+
+    try {
+      const liveBal = await web3WalletService.getUSDGBalance(targetAddress);
+      setBalance(liveBal);
+
+      // Sync user profile to Supabase with live balance
+      supabaseService.syncUser(targetAddress, liveBal).then(user => {
+        if (user && user.balance !== undefined && !isNaN(user.balance)) {
+          // If Supabase has an active platform ledger, reconcile
+          if (user.balance > 0 && liveBal === 0) {
+            setBalance(user.balance);
+          }
+        }
+      });
+    } catch (err) {
+      console.warn('Error fetching wallet USDG balance:', err);
+    }
+  }, [fullWalletAddress, walletAddress]);
+
+  // Auto detect injected wallet on load
+  useEffect(() => {
+    const checkInjectedWallet = async () => {
+      const ethereum = typeof window !== 'undefined' ? (window as unknown as { ethereum?: { request: (args: { method: string }) => Promise<string[]> } }).ethereum : undefined;
+      if (ethereum) {
+        try {
+          const accounts = await ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            const acc = accounts[0];
+            const display = acc.slice(0, 6) + '...' + acc.slice(-4);
+            setWalletAddress(display, acc);
+          }
+        } catch (_) {}
+      }
+    };
+
+    checkInjectedWallet();
+  }, [setWalletAddress]);
+
+  // Listen to Ethereum wallet account/chain changes
+  useEffect(() => {
+    const ethereum = typeof window !== 'undefined' ? (window as unknown as { ethereum?: { on?: (event: string, handler: (args: unknown) => void) => void; removeListener?: (event: string, handler: (args: unknown) => void) => void } }).ethereum : undefined;
+    if (!ethereum || !ethereum.on) return;
+
+    const handleAccountsChanged = (accounts: unknown) => {
+      const accList = accounts as string[];
+      if (accList && accList.length > 0) {
+        const acc = accList[0];
+        const display = acc.slice(0, 6) + '...' + acc.slice(-4);
+        setWalletAddress(display, acc);
+      } else {
+        setWalletAddress(null, null);
+      }
+    };
+
+    const handleChainChanged = () => {
+      refreshBalance();
+    };
+
+    ethereum.on('accountsChanged', handleAccountsChanged);
+    ethereum.on('chainChanged', handleChainChanged);
+
+    return () => {
+      if (ethereum.removeListener) {
+        ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        ethereum.removeListener('chainChanged', handleChainChanged);
+      }
+    };
+  }, [setWalletAddress, refreshBalance]);
+
+  // Fetch balance when wallet is connected/changed
+  useEffect(() => {
+    if (fullWalletAddress || walletAddress) {
+      refreshBalance();
+
+      // Fetch positions for this wallet
+      const targetAddr = fullWalletAddress || walletAddress || '';
+      supabaseService.fetchUserPositions(targetAddr).then(dbPositions => {
         if (dbPositions.length > 0) {
           const active = dbPositions.filter(p => p.status === 'ACTIVE');
           const settled = dbPositions.filter(p => p.status !== 'ACTIVE');
@@ -118,8 +229,21 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSettledPositions(settled);
         }
       });
+    } else {
+      setBalance(0);
     }
-  }, [walletAddress]);
+  }, [fullWalletAddress, walletAddress, refreshBalance]);
+
+  // Periodic balance polling every 12 seconds when wallet connected
+  useEffect(() => {
+    if (!isWalletConnected || (!fullWalletAddress && !walletAddress)) return;
+
+    const timer = setInterval(() => {
+      refreshBalance();
+    }, 12000);
+
+    return () => clearInterval(timer);
+  }, [isWalletConnected, fullWalletAddress, walletAddress, refreshBalance]);
 
   // Sync Supabase Leaderboard
   useEffect(() => {
@@ -141,10 +265,6 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
     soundService.playClick();
   };
-
-  useEffect(() => {
-    localStorage.setItem('rova_balance', balance.toString());
-  }, [balance]);
 
   useEffect(() => {
     localStorage.setItem('rova_history', JSON.stringify(settledPositions.slice(0, 50)));
@@ -186,10 +306,11 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
             newlySettled.push(settledPos);
 
-            // Sync with Supabase
-            const addr = walletAddress || '0xDemoTrader';
+            // Sync with Supabase & on-chain state
+            const targetAddr = fullWalletAddress || walletAddress || '0xDemoTrader';
             const updatedBalance = isWon ? balance + payoutAmount : balance;
-            supabaseService.settlePosition(pos.id, addr, currentPrice, isWon, payoutAmount, updatedBalance);
+            supabaseService.settlePosition(pos.id, targetAddr, currentPrice, isWon, payoutAmount, updatedBalance);
+            web3WalletService.saveUserBalance(targetAddr, updatedBalance);
 
             if (isWon) {
               setBalance(b => b + payoutAmount);
@@ -226,14 +347,14 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [balance, walletAddress]);
+  }, [balance, walletAddress, fullWalletAddress]);
 
   const placePosition = useCallback((direction: Direction, amount: number) => {
     if (amount <= 0 || isNaN(amount)) {
       return { success: false, message: 'Invalid trade size' };
     }
     if (amount > balance) {
-      return { success: false, message: 'Not enough balance' };
+      return { success: false, message: 'Insufficient USDG balance in connected wallet' };
     }
 
     const currentPrice = priceFeedService.getCurrentPrice(selectedAsset.symbol);
@@ -260,10 +381,11 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setActivePositions(prev => [newPosition, ...prev]);
     soundService.playTradeEntry(direction);
 
-    // Persist to Supabase
-    const addr = walletAddress || '0xDemoTrader';
-    supabaseService.savePosition(newPosition, addr);
-    supabaseService.updateBalance(addr, newBal, 'WITHDRAW', amount);
+    // Persist to Supabase & local storage
+    const targetAddr = fullWalletAddress || walletAddress || '0xDemoTrader';
+    supabaseService.savePosition(newPosition, targetAddr);
+    supabaseService.updateBalance(targetAddr, newBal, 'WITHDRAW', amount);
+    web3WalletService.saveUserBalance(targetAddr, newBal);
 
     setStats(s => ({
       ...s,
@@ -274,26 +396,28 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }));
 
     return { success: true };
-  }, [balance, selectedAsset, selectedDuration, payoutMultiplier, walletAddress]);
+  }, [balance, selectedAsset, selectedDuration, payoutMultiplier, walletAddress, fullWalletAddress]);
 
   const depositDemoFunds = (amount: number) => {
     const newBal = balance + amount;
     setBalance(newBal);
     soundService.playWin();
 
-    const addr = walletAddress || '0xDemoTrader';
-    supabaseService.updateBalance(addr, newBal, 'DEPOSIT', amount);
+    const targetAddr = fullWalletAddress || walletAddress || '0xDemoTrader';
+    supabaseService.updateBalance(targetAddr, newBal, 'DEPOSIT', amount);
+    web3WalletService.saveUserBalance(targetAddr, newBal);
   };
 
   const withdrawDemoFunds = (amount: number) => {
     if (amount <= 0 || isNaN(amount)) return { success: false, message: 'Invalid amount' };
-    if (amount > balance) return { success: false, message: 'Not enough balance' };
+    if (amount > balance) return { success: false, message: 'Insufficient USDG balance' };
     const newBal = balance - amount;
     setBalance(newBal);
     soundService.playClick();
 
-    const addr = walletAddress || '0xDemoTrader';
-    supabaseService.updateBalance(addr, newBal, 'WITHDRAW', amount);
+    const targetAddr = fullWalletAddress || walletAddress || '0xDemoTrader';
+    supabaseService.updateBalance(targetAddr, newBal, 'WITHDRAW', amount);
+    web3WalletService.saveUserBalance(targetAddr, newBal);
     return { success: true };
   };
 
@@ -308,8 +432,8 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const disconnectWallet = () => {
-    setIsWalletConnected(false);
-    setWalletAddress(null);
+    setWalletAddress(null, null);
+    setBalance(0);
     soundService.playClick();
   };
 
@@ -350,7 +474,9 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
         isWalletConnected,
         setIsWalletConnected,
         walletAddress,
+        fullWalletAddress,
         setWalletAddress,
+        refreshBalance,
         connectWallet,
         disconnectWallet,
         isDatabaseConnected,

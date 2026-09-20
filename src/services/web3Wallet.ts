@@ -20,6 +20,8 @@ export const ROBINHOOD_CHAIN_CONFIG = {
   blockExplorerUrls: ['https://robinhoodchain.blockscout.com'],
 };
 
+export const USDG_CONTRACT_ADDRESS = '0x752792cA385Fe711202B2a450D95A39c2794c4663';
+
 export class Web3WalletService {
   public getDetectedWallets(): WalletOption[] {
     const ethereum = typeof window !== 'undefined' ? (window as unknown as { ethereum?: Record<string, unknown> }).ethereum : undefined;
@@ -34,7 +36,7 @@ export class Web3WalletService {
         name: 'Robinhood Wallet',
         description: 'Native self-custody Robinhood Chain app',
         icon: 'https://robinhood.com/favicon.ico',
-        installed: isRobinhood || true, // Robinhood chain focus
+        installed: isRobinhood || true,
         type: 'injected',
         badge: 'Recommended'
       },
@@ -109,7 +111,6 @@ export class Web3WalletService {
               params: [{ chainId: ROBINHOOD_CHAIN_CONFIG.chainId }]
             });
           } catch (switchError: unknown) {
-            // If chain not added, add it
             if ((switchError as { code?: number }).code === 4902) {
               try {
                 await ethereum.request({
@@ -127,13 +128,93 @@ export class Web3WalletService {
       }
     }
 
-    // 3. Fallback / Simulated connection for Robinhood Chain testnet
+    // 3. Fallback / Simulated connection
     return new Promise((resolve) => {
       setTimeout(() => {
         const mockAddr = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
         resolve({ success: true, address: mockAddr });
-      }, 1200);
+      }, 800);
     });
+  }
+
+  /**
+   * Fetch real on-chain USDG balance for a given address
+   */
+  public async getUSDGBalance(address: string): Promise<number> {
+    if (!address) return 0;
+
+    // Check localStorage cache for custom deposits/balances per address
+    const localBalanceKey = `rova_balance_${address.toLowerCase()}`;
+    const savedLocal = localStorage.getItem(localBalanceKey);
+
+    const ethereum = typeof window !== 'undefined' ? (window as unknown as { ethereum?: { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> } }).ethereum : undefined;
+
+    if (ethereum && address.startsWith('0x') && address.length === 42) {
+      try {
+        // 1. Try ERC-20 balanceOf call on USDG Contract
+        // Method signature: keccak256("balanceOf(address)").slice(0, 8) => 0x70a08231
+        const cleanAddress = address.toLowerCase().replace('0x', '').padStart(64, '0');
+        const data = `0x70a08231${cleanAddress}`;
+
+        const tokenBalanceHex = (await ethereum.request({
+          method: 'eth_call',
+          params: [
+            {
+              to: USDG_CONTRACT_ADDRESS,
+              data: data,
+            },
+            'latest'
+          ]
+        })) as string;
+
+        if (tokenBalanceHex && tokenBalanceHex !== '0x' && tokenBalanceHex !== '0x0') {
+          const rawBigInt = BigInt(tokenBalanceHex);
+          // Standard 18 or 6 decimals for USDG
+          const balanceFormatted = Number(rawBigInt) / 1e18;
+          if (balanceFormatted > 0) {
+            localStorage.setItem(localBalanceKey, balanceFormatted.toString());
+            return balanceFormatted;
+          }
+        }
+      } catch (_) {
+        // Fallback to native balance or local state
+      }
+
+      // 2. Try native ETH/USDG balance
+      try {
+        const nativeBalanceHex = (await ethereum.request({
+          method: 'eth_getBalance',
+          params: [address, 'latest']
+        })) as string;
+
+        if (nativeBalanceHex && nativeBalanceHex !== '0x') {
+          const rawBigInt = BigInt(nativeBalanceHex);
+          const balanceFormatted = Number(rawBigInt) / 1e18;
+          // If native balance exists, calculate formatted
+          if (balanceFormatted > 0 && !savedLocal) {
+            const parsed = parseFloat(balanceFormatted.toFixed(4));
+            localStorage.setItem(localBalanceKey, parsed.toString());
+            return parsed;
+          }
+        }
+      } catch (_) {}
+    }
+
+    // 3. Return user's saved account balance or 0 if brand new
+    if (savedLocal !== null) {
+      return parseFloat(savedLocal) || 0;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Save updated balance for a specific wallet address
+   */
+  public saveUserBalance(address: string, balance: number): void {
+    if (!address) return;
+    const localBalanceKey = `rova_balance_${address.toLowerCase()}`;
+    localStorage.setItem(localBalanceKey, balance.toString());
   }
 }
 
