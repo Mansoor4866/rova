@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { Asset, Position, Direction, LeaderboardEntry, PlatformStats, ActivePage, AppTheme, ChartMode } from '../types';
+import { Asset, Position, Direction, LeaderboardEntry, PlatformStats, ActivePage, AppTheme, ChartMode, HUDTheme } from '../types';
 import { INITIAL_ASSETS, priceFeedService } from '../services/priceFeed';
 import { soundService } from '../services/soundService';
 import { supabaseService, isSupabaseConfigured } from '../services/supabase';
@@ -9,6 +9,8 @@ import confetti from 'canvas-confetti';
 interface TradingContextType {
   theme: AppTheme;
   toggleTheme: () => void;
+  hudTheme: HUDTheme;
+  setHudTheme: (theme: HUDTheme) => void;
   chartMode: ChartMode;
   setChartMode: (mode: ChartMode) => void;
   activePage: ActivePage;
@@ -56,6 +58,16 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const saved = localStorage.getItem('rova_theme');
     return (saved === 'light' || saved === 'dark') ? saved : 'dark';
   });
+
+  const [hudTheme, setHudThemeState] = useState<HUDTheme>(() => {
+    const saved = localStorage.getItem('rova_hud_theme') as HUDTheme;
+    return (saved === 'crimson' || saved === 'cyan' || saved === 'purple' || saved === 'emerald') ? saved : 'crimson';
+  });
+
+  const setHudTheme = useCallback((newTheme: HUDTheme) => {
+    setHudThemeState(newTheme);
+    localStorage.setItem('rova_hud_theme', newTheme);
+  }, []);
 
   const [chartMode, setChartMode] = useState<ChartMode>('area');
   const [activePage, setActivePage] = useState<ActivePage>('landing');
@@ -442,6 +454,8 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
       value={{
         theme,
         toggleTheme,
+        hudTheme,
+        setHudTheme,
         chartMode,
         setChartMode,
         activePage,

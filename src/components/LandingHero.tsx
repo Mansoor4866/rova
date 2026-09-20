@@ -23,9 +23,8 @@ const CONTRACT_ADDRESS_FULL = '0x752792cA385Fe711202B2a450D95A39c2794c4663';
 const CONTRACT_ADDRESS_SHORT = '0x7527...RovaPredictionContract';
 
 export const LandingHero: React.FC = () => {
-  const { setActivePage, assets } = useTrading();
+  const { setActivePage, assets, hudTheme, setHudTheme } = useTrading();
   const [copied, setCopied] = useState(false);
-  const [colorScheme, setColorScheme] = useState<'crimson' | 'cyan' | 'purple' | 'emerald'>('crimson');
   const [activeModal, setActiveModal] = useState<'features' | 'how' | 'arch' | 'pricing' | null>(null);
 
   const handleCopyContract = () => {
@@ -41,23 +40,7 @@ export const LandingHero: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-[#050608] text-white selection:bg-rose-600 selection:text-white">
-      
-      {/* 3D WebGL Particle Vortex Background */}
-      <Rova3DCanvas colorScheme={colorScheme} speedMultiplier={1} />
-
-      {/* Cyber Grid & Vignette Overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none z-0 opacity-40"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at 50% 50%, rgba(255, 30, 70, 0.08) 0%, transparent 60%),
-            linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 48px 48px, 48px 48px'
-        }}
-      />
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-between overflow-hidden bg-transparent text-white selection:bg-rose-600 selection:text-white">
 
       {/* Top Floating Mini Bar: Contract Address & Interactive Mode */}
       <div className="relative z-10 mx-auto max-w-[1240px] w-full px-4 sm:px-6 pt-4 flex flex-wrap items-center justify-between gap-3">
@@ -90,11 +73,11 @@ export const LandingHero: React.FC = () => {
             <button
               key={scheme}
               onClick={() => {
-                setColorScheme(scheme);
+                setHudTheme(scheme);
                 soundService.playClick();
               }}
               className={`px-2.5 py-0.5 rounded-full transition-all capitalize font-medium ${
-                colorScheme === scheme
+                hudTheme === scheme
                   ? scheme === 'crimson'
                     ? 'bg-rose-600 text-white font-bold shadow-xs'
                     : scheme === 'cyan'

@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Default: Obsidian Dark */
-  --app-bg: #07090e;
-  --app-card: #0d121c;
-  --app-elev: #131b2a;
-  --app-elev-2: #1b263b;
-  --app-border: #1e2a40;
-  --app-border-subtle: #162032;
+  /* Default: Obsidian 3D Cyber Dark */
+  --app-bg: #050608;
+  --app-card: rgba(10, 14, 23, 0.78);
+  --app-elev: rgba(16, 23, 38, 0.82);
+  --app-elev-2: rgba(24, 34, 54, 0.88);
+  --app-border: rgba(255, 255, 255, 0.09);
+  --app-border-subtle: rgba(255, 255, 255, 0.05);
   --app-fg: #f3f6fc;
   --app-fg-muted: #8b9bb4;
   --app-fg-dim: #54647c;

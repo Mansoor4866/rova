@@ -26,6 +26,8 @@ export const Header: React.FC = () => {
   const {
     theme,
     toggleTheme,
+    hudTheme,
+    setHudTheme,
     activePage,
     setActivePage,
     balance,
@@ -159,9 +161,40 @@ export const Header: React.FC = () => {
 
         </div>
 
-        {/* Right: Controls, Theme Switcher, Balance, Wallet */}
+        {/* Right: Controls, 3D HUD, Theme Switcher, Balance, Wallet */}
         <div className="flex items-center gap-2 sm:gap-3">
           
+          {/* Global 3D HUD Palette Switcher */}
+          <div className="hidden lg:flex items-center gap-1 bg-app-elev/90 border border-app-border-subtle p-1 rounded-xl text-[11px] font-mono">
+            <span className="text-app-fg-dim px-1.5 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-rose-500" />
+              <span>3D:</span>
+            </span>
+            {(['crimson', 'cyan', 'purple', 'emerald'] as const).map((scheme) => (
+              <button
+                key={scheme}
+                onClick={() => {
+                  setHudTheme(scheme);
+                  soundService.playClick();
+                }}
+                className={`px-2 py-0.5 rounded-lg transition-all capitalize font-medium ${
+                  hudTheme === scheme
+                    ? scheme === 'crimson'
+                      ? 'bg-rose-600 text-white font-bold shadow-xs'
+                      : scheme === 'cyan'
+                      ? 'bg-cyan-500 text-black font-bold shadow-xs'
+                      : scheme === 'purple'
+                      ? 'bg-purple-600 text-white font-bold shadow-xs'
+                      : 'bg-emerald-500 text-black font-bold shadow-xs'
+                    : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+                }`}
+                title={`Switch 3D Scene to ${scheme}`}
+              >
+                {scheme === 'crimson' ? '🔴' : scheme === 'cyan' ? '🔵' : scheme === 'purple' ? '🟣' : '🟢'}
+              </button>
+            ))}
+          </div>
+
           {/* Theme Switcher */}
           <button
             onClick={toggleTheme}

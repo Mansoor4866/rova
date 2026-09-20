@@ -13,12 +13,35 @@ import { RulesModal } from './components/RulesModal';
 import { FullPositionsView } from './components/FullPositionsView';
 import { FullLeaderboardView } from './components/FullLeaderboardView';
 import { LandingHero } from './components/LandingHero';
+import { Rova3DCanvas } from './components/3d/Rova3DCanvas';
 
 export const AppContent: React.FC = () => {
-  const { activePage, isConnectModalOpen, setIsConnectModalOpen } = useTrading();
+  const { activePage, isConnectModalOpen, setIsConnectModalOpen, hudTheme } = useTrading();
 
   return (
-    <div className="min-h-screen flex flex-col bg-app-bg text-app-fg selection:bg-neon-cyan selection:text-obsidian-950 font-sans">
+    <div className="relative min-h-screen flex flex-col bg-app-bg text-app-fg selection:bg-neon-cyan selection:text-obsidian-950 font-sans overflow-x-hidden">
+      
+      {/* Global Persistent 3D Three.js Particle Universe Background */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <Rova3DCanvas 
+          colorScheme={hudTheme} 
+          speedMultiplier={activePage === 'landing' ? 1.0 : 0.6} 
+          className="opacity-90"
+        />
+        {/* Ambient Vignette & Grid */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 50% 50%, rgba(255, 30, 70, 0.06) 0%, transparent 65%),
+              linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+            `,
+            backgroundSize: '100% 100%, 48px 48px, 48px 48px'
+          }}
+        />
+      </div>
+
       {/* Top Header */}
       <Header />
 

@@ -71,3 +71,4 @@ export interface Candle {
 export type ActivePage = 'landing' | 'trade' | 'positions' | 'leaderboard';
 export type AppTheme = 'dark' | 'light';
 export type ChartMode = 'area' | 'candles';
+export type HUDTheme = 'crimson' | 'cyan' | 'purple' | 'emerald';
