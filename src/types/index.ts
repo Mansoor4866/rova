@@ -68,6 +68,6 @@ export interface Candle {
   price: number;
 }
 
-export type ActivePage = 'trade' | 'positions' | 'leaderboard';
+export type ActivePage = 'landing' | 'trade' | 'positions' | 'leaderboard';
 export type AppTheme = 'dark' | 'light';
 export type ChartMode = 'area' | 'candles';

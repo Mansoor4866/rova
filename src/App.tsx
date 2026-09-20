@@ -12,6 +12,7 @@ import { ConnectWalletModal } from './components/ConnectWalletModal';
 import { RulesModal } from './components/RulesModal';
 import { FullPositionsView } from './components/FullPositionsView';
 import { FullLeaderboardView } from './components/FullLeaderboardView';
+import { LandingHero } from './components/LandingHero';
 
 export const AppContent: React.FC = () => {
   const { activePage, isConnectModalOpen, setIsConnectModalOpen } = useTrading();
@@ -20,6 +21,9 @@ export const AppContent: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-app-bg text-app-fg selection:bg-neon-cyan selection:text-obsidian-950 font-sans">
       {/* Top Header */}
       <Header />
+
+      {/* 3D Landing / Knox-style Hero View */}
+      {activePage === 'landing' && <LandingHero />}
 
       {/* Main Terminal View */}
       {activePage === 'trade' && (

@@ -55,7 +55,7 @@ export const TradingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [chartMode, setChartMode] = useState<ChartMode>('area');
-  const [activePage, setActivePage] = useState<ActivePage>('trade');
+  const [activePage, setActivePage] = useState<ActivePage>('landing');
   const [assets, setAssets] = useState<Asset[]>(INITIAL_ASSETS);
   const [selectedAsset, setSelectedAsset] = useState<Asset>(INITIAL_ASSETS[0]);
   const [selectedDuration, setSelectedDuration] = useState<number>(15);

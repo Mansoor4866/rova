@@ -14,7 +14,8 @@ import {
   Activity,
   Shield,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  Sparkles
 } from 'lucide-react';
 import { soundService } from '../services/soundService';
 
@@ -70,19 +71,20 @@ export const Header: React.FC = () => {
           {/* Logo */}
           <button
             onClick={() => {
-              setActivePage('trade');
+              setActivePage('landing');
               soundService.playClick();
             }}
             className="flex items-center gap-2.5 group"
           >
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-neon-cyan via-app-accent to-neon-purple p-0.5 shadow-neon-cyan/20 shadow-md group-hover:scale-105 transition-transform">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-rose-500 via-neon-cyan to-neon-purple p-0.5 shadow-rose-500/20 shadow-md group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-obsidian-950 rounded-[10px] flex items-center justify-center">
-                <Zap className="w-4 h-4 text-neon-cyan fill-neon-cyan/30" />
+                <Zap className="w-4 h-4 text-rose-500 fill-rose-500/30" />
               </div>
             </div>
             <div className="flex flex-col text-left">
               <span className="font-extrabold text-xl tracking-tight font-sans text-app-fg flex items-center gap-1 leading-none">
-                RO<span className="text-neon-cyan">VA</span>
+                RO<span className="text-rose-500">VA</span>
+                <span className="text-[10px] font-mono text-neutral-400 font-normal">™</span>
               </span>
               <span className="text-[9px] font-mono text-neon-green tracking-widest uppercase font-bold mt-1 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
@@ -95,10 +97,24 @@ export const Header: React.FC = () => {
           <nav className="hidden md:flex items-center gap-1 bg-app-elev/80 border border-app-border-subtle p-1 rounded-xl">
             <button
               onClick={() => {
+                setActivePage('landing');
+                soundService.playClick();
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                activePage === 'landing'
+                  ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30 shadow-xs'
+                  : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+              <span>3D Hub</span>
+            </button>
+            <button
+              onClick={() => {
                 setActivePage('trade');
                 soundService.playClick();
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activePage === 'trade'
                   ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
                   : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
@@ -111,7 +127,7 @@ export const Header: React.FC = () => {
                 setActivePage('positions');
                 soundService.playClick();
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activePage === 'positions'
                   ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
                   : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
@@ -124,7 +140,7 @@ export const Header: React.FC = () => {
                 setActivePage('leaderboard');
                 soundService.playClick();
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activePage === 'leaderboard'
                   ? 'bg-neon-cyan/15 text-neon-cyan border border-neon-cyan/30 shadow-xs'
                   : 'text-app-fg-muted hover:text-app-fg hover:bg-app-elev-2'
