@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTrading } from '../context/TradingContext';
+import { Hero3DVisual } from './Hero3DVisual';
 import { 
   ArrowRight, 
   Copy, 
@@ -76,7 +77,7 @@ export const FactoLanding: React.FC = () => {
       
       {/* 1. FACTO SIGNATURE HERO SECTION */}
       <section className="mx-auto max-w-[1360px] px-4 sm:px-6 pt-6 sm:pt-8">
-        <div className="facto-panel-elevated bg-app-card border border-app-border rounded-[24px] sm:rounded-[32px] p-6 sm:p-12 lg:p-16 relative overflow-hidden">
+        <div className="facto-panel-elevated bg-app-card border border-app-border rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 lg:p-14 relative overflow-hidden">
           
           {/* Subtle Pink/Emerald Accent Glow in Background with Floating and Pulse Animations */}
           <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-bl from-facto-pink/15 via-facto-pink/5 to-transparent rounded-full blur-3xl pointer-events-none animate-float-slow" />
@@ -103,68 +104,76 @@ export const FactoLanding: React.FC = () => {
             </button>
           </div>
 
-          {/* Main Hero Copy */}
-          <div className="max-w-4xl relative z-10">
-            <h1 className="animate-hero-fade animate-delay-200 text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-[-0.035em] text-app-fg leading-[1.06] mb-6">
-              Turn price volatility into <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-facto-pink via-[#ff65bf] to-facto-pink">
-                instant on-chain yield.
-              </span>
-            </h1>
-
-            <p className="animate-hero-fade animate-delay-300 text-base sm:text-xl text-app-fg-muted max-w-2xl leading-relaxed mb-10 font-normal">
-              ROVA lets traders and automated agents execute sub-second micro-predictions across Crypto and Tech Equities, approving every payout against verifiable oracles in under 5 seconds.
-            </p>
-
-            {/* Facto Dual Buttons with Dynamic Micro-Animations */}
-            <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-3.5 mb-10">
-              <button
-                onClick={handleLaunchTerminal}
-                className="facto-btn-dark group relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Launch Trading Terminal
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+          {/* Main Hero Content: 2-Column Grid (Left: Headlines & CTA, Right: 3D Holographic Visual Animation) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
+            {/* Left Column: Copy & Actions */}
+            <div className="lg:col-span-7 xl:col-span-7">
+              <h1 className="animate-hero-fade animate-delay-200 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-[-0.035em] text-app-fg leading-[1.06] mb-6">
+                Turn price volatility into <br className="hidden sm:inline" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-facto-pink via-[#ff65bf] to-facto-pink">
+                  instant on-chain yield.
                 </span>
-                <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
+              </h1>
 
-              <button
-                onClick={() => {
-                  const el = document.getElementById('facto-how-it-works');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="facto-btn-light group hover:border-app-fg/30 transition-all"
-              >
-                <span>How It Works</span>
-                <ChevronRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-              </button>
+              <p className="animate-hero-fade animate-delay-300 text-base sm:text-lg lg:text-xl text-app-fg-muted max-w-2xl leading-relaxed mb-8 sm:mb-10 font-normal">
+                ROVA lets traders and automated agents execute sub-second micro-predictions across Crypto and Tech Equities, approving every payout against verifiable oracles in under 5 seconds.
+              </p>
 
-              <button
-                onClick={() => {
-                  const el = document.getElementById('facto-simulator');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="px-5 py-3.5 rounded-xl border border-app-border/40 hover:border-app-border bg-app-elev/40 hover:bg-app-elev text-sm font-medium text-app-fg-muted hover:text-app-fg transition-all"
-              >
-                Try Live Demo ↓
-              </button>
+              {/* Facto Dual Buttons with Dynamic Micro-Animations */}
+              <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-3.5 mb-8 sm:mb-10">
+                <button
+                  onClick={handleLaunchTerminal}
+                  className="facto-btn-dark group relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Launch Trading Terminal
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+                  </span>
+                  <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('facto-how-it-works');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="facto-btn-light group hover:border-app-fg/30 transition-all"
+                >
+                  <span>How It Works</span>
+                  <ChevronRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('facto-simulator');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="px-5 py-3.5 rounded-xl border border-app-border/40 hover:border-app-border bg-app-elev/40 hover:bg-app-elev text-sm font-medium text-app-fg-muted hover:text-app-fg transition-all"
+                >
+                  Try Live Demo ↓
+                </button>
+              </div>
+
+              {/* Live Stats Pill Row in Hero */}
+              <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-3 text-xs font-mono text-app-fg-muted">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-app-elev/60 border border-app-border/60">
+                  <Clock className="w-3.5 h-3.5 text-facto-pink" />
+                  <span>&lt; 5s Settlement</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-app-elev/60 border border-app-border/60">
+                  <Zap className="w-3.5 h-3.5 text-facto-green" />
+                  <span>Zero Gas Executions</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-app-elev/60 border border-app-border/60">
+                  <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Cryptographic Proofs</span>
+                </div>
+              </div>
             </div>
 
-            {/* Live Stats Pill Row in Hero */}
-            <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-4 text-xs font-mono text-app-fg-muted">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
-                <Clock className="w-3.5 h-3.5 text-facto-pink" />
-                <span>&lt; 5s Settlement</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
-                <Zap className="w-3.5 h-3.5 text-facto-green" />
-                <span>Zero Gas Executions</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-                <span>Cryptographic Proofs</span>
-              </div>
+            {/* Right Column: Interactive 3D Holographic Visualizer */}
+            <div className="lg:col-span-5 xl:col-span-5 flex items-center justify-center relative animate-hero-fade animate-delay-300 w-full">
+              <Hero3DVisual />
             </div>
           </div>
 
