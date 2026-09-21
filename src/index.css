@@ -158,6 +158,56 @@ html, body {
   animation: enterSmooth 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* Hero Stagger & Ambient Animations */
+@keyframes heroFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.05);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+.animate-hero-fade {
+  animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
 /* Partner Logo Marquee */
 @keyframes marqueeFacto {
   0% { transform: translateX(0); }
@@ -166,8 +216,9 @@ html, body {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marqueeFacto 22s linear infinite;
+  animation: marqueeFacto 28s linear infinite;
 }
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+

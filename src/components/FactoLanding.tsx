@@ -16,7 +16,13 @@ import {
   ExternalLink,
   Clock,
   CheckCircle2,
-  Lock
+  Lock,
+  Activity,
+  Coins,
+  Sparkles,
+  Cpu,
+  Database,
+  Globe
 } from 'lucide-react';
 import { soundService } from '../services/soundService';
 
@@ -72,46 +78,55 @@ export const FactoLanding: React.FC = () => {
       <section className="mx-auto max-w-[1360px] px-4 sm:px-6 pt-6 sm:pt-8">
         <div className="facto-panel-elevated bg-app-card border border-app-border rounded-[24px] sm:rounded-[32px] p-6 sm:p-12 lg:p-16 relative overflow-hidden">
           
-          {/* Subtle Pink/Slate Accent Glow in Background (Clean 2D, NO 3D) */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-facto-pink/10 via-facto-pink/5 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-[400px] h-[300px] bg-gradient-to-tr from-facto-green/5 via-transparent to-transparent rounded-full blur-2xl pointer-events-none" />
+          {/* Subtle Pink/Emerald Accent Glow in Background with Floating and Pulse Animations */}
+          <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-bl from-facto-pink/15 via-facto-pink/5 to-transparent rounded-full blur-3xl pointer-events-none animate-float-slow" />
+          <div className="absolute bottom-0 left-1/4 w-[450px] h-[350px] bg-gradient-to-tr from-facto-green/10 via-transparent to-transparent rounded-full blur-2xl pointer-events-none animate-pulse-glow" />
+          <div className="absolute top-1/3 left-10 w-[250px] h-[250px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none animate-float-slow" style={{ animationDelay: '3s' }} />
 
-          {/* Top Contract Address Pill (Facto style) */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-app-elev border border-app-border text-xs font-mono text-app-fg-muted">
-              <span className="w-2 h-2 rounded-full bg-facto-pink animate-pulse" />
+          {/* Top Contract Address Pill & Protocol Status (Animated Entrance) */}
+          <div className="animate-hero-fade animate-delay-100 flex flex-wrap items-center justify-between gap-3 mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-app-elev border border-app-border text-xs font-mono text-app-fg-muted shadow-sm hover:border-app-fg/20 transition-colors">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-facto-pink opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-facto-pink"></span>
+              </span>
               <span>ROVA PROTOCOL // ROBINHOOD CHAIN (4663)</span>
             </div>
 
             <button
               onClick={handleCopyContract}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-app-elev border border-app-border hover:border-facto-pink/40 text-xs font-mono text-app-fg-muted hover:text-app-fg transition-all"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-app-elev border border-app-border hover:border-facto-pink/40 hover:bg-facto-pink/5 text-xs font-mono text-app-fg-muted hover:text-app-fg transition-all active:scale-95"
             >
               <span className="text-app-fg-dim">Contract:</span>
               <span className="font-semibold text-app-fg">{CONTRACT_ADDRESS_SHORT}</span>
-              {copied ? <Check className="w-3.5 h-3.5 text-facto-green" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-facto-green animate-bounce" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
 
           {/* Main Hero Copy */}
-          <div className="max-w-4xl">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-[-0.035em] text-app-fg leading-[1.06] mb-6">
+          <div className="max-w-4xl relative z-10">
+            <h1 className="animate-hero-fade animate-delay-200 text-4xl sm:text-6xl lg:text-7xl font-semibold tracking-[-0.035em] text-app-fg leading-[1.06] mb-6">
               Turn price volatility into <br className="hidden sm:inline" />
-              <span className="text-facto-pink">instant on-chain yield.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-facto-pink via-[#ff65bf] to-facto-pink">
+                instant on-chain yield.
+              </span>
             </h1>
 
-            <p className="text-base sm:text-xl text-app-fg-muted max-w-2xl leading-relaxed mb-10 font-normal">
+            <p className="animate-hero-fade animate-delay-300 text-base sm:text-xl text-app-fg-muted max-w-2xl leading-relaxed mb-10 font-normal">
               ROVA lets traders and automated agents execute sub-second micro-predictions across Crypto and Tech Equities, approving every payout against verifiable oracles in under 5 seconds.
             </p>
 
-            {/* Facto Dual Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5">
+            {/* Facto Dual Buttons with Dynamic Micro-Animations */}
+            <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-3.5 mb-10">
               <button
                 onClick={handleLaunchTerminal}
-                className="facto-btn-dark group"
+                className="facto-btn-dark group relative overflow-hidden"
               >
-                <span>Launch Trading Terminal</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10 flex items-center gap-2">
+                  Launch Trading Terminal
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+                </span>
+                <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
 
               <button
@@ -119,9 +134,10 @@ export const FactoLanding: React.FC = () => {
                   const el = document.getElementById('facto-how-it-works');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="facto-btn-light"
+                className="facto-btn-light group hover:border-app-fg/30 transition-all"
               >
                 <span>How It Works</span>
+                <ChevronRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
               </button>
 
               <button
@@ -129,39 +145,95 @@ export const FactoLanding: React.FC = () => {
                   const el = document.getElementById('facto-simulator');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-5 py-3.5 rounded-xl border border-transparent hover:border-app-border text-sm font-medium text-app-fg-muted hover:text-app-fg transition-all"
+                className="px-5 py-3.5 rounded-xl border border-app-border/40 hover:border-app-border bg-app-elev/40 hover:bg-app-elev text-sm font-medium text-app-fg-muted hover:text-app-fg transition-all"
               >
                 Try Live Demo ↓
               </button>
             </div>
+
+            {/* Live Stats Pill Row in Hero */}
+            <div className="animate-hero-fade animate-delay-400 flex flex-wrap items-center gap-4 text-xs font-mono text-app-fg-muted">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
+                <Clock className="w-3.5 h-3.5 text-facto-pink" />
+                <span>&lt; 5s Settlement</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
+                <Zap className="w-3.5 h-3.5 text-facto-green" />
+                <span>Zero Gas Executions</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-app-elev/60 border border-app-border/60">
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                <span>Cryptographic Proofs</span>
+              </div>
+            </div>
           </div>
 
-          {/* Partner & Infrastructure Marquee Strip (Facto Style) */}
-          <div className="mt-14 pt-8 border-t border-app-border-subtle flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
-            <span className="text-xs font-mono uppercase tracking-wider text-app-fg-dim shrink-0">
+          {/* Partner & Infrastructure Marquee Strip (No Emojis, Clean SVG Icons, Smooth Ticker) */}
+          <div className="animate-hero-fade animate-delay-500 mt-14 pt-8 border-t border-app-border-subtle flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
+            <span className="text-xs font-mono uppercase tracking-wider text-app-fg-dim shrink-0 flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-facto-pink" />
               AUDITED PROTOCOL ORACLES:
             </span>
-            <div className="overflow-hidden flex-1">
+            <div className="overflow-hidden flex-1 relative mask-gradient">
               <div className="animate-marquee items-center gap-8 text-xs font-mono text-app-fg-muted">
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">⚡ ROBINHOOD CHAIN</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Zap className="w-3.5 h-3.5 text-facto-green shrink-0" />
+                  ROBINHOOD CHAIN
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">🔮 PYTH NETWORK</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Radio className="w-3.5 h-3.5 text-facto-pink shrink-0" />
+                  PYTH NETWORK
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">💎 USDG TREASURY</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Coins className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                  USDG TREASURY
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">🌐 BINANCE FEED</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Activity className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  BINANCE FEED
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">🛡️ VERIFIABLE MERKLE PROOFS</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <ShieldCheck className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                  VERIFIABLE MERKLE PROOFS
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">⚡ ROBINHOOD CHAIN</span>
+                {/* Repeat seamless loop */}
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Zap className="w-3.5 h-3.5 text-facto-green shrink-0" />
+                  ROBINHOOD CHAIN
+                </span>
                 <span className="text-app-fg-dim">•</span>
-                <span className="flex items-center gap-1.5 font-semibold text-app-fg">🔮 PYTH NETWORK</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Radio className="w-3.5 h-3.5 text-facto-pink shrink-0" />
+                  PYTH NETWORK
+                </span>
+                <span className="text-app-fg-dim">•</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Coins className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                  USDG TREASURY
+                </span>
+                <span className="text-app-fg-dim">•</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <Activity className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  BINANCE FEED
+                </span>
+                <span className="text-app-fg-dim">•</span>
+                <span className="flex items-center gap-1.5 font-semibold text-app-fg tracking-wide">
+                  <ShieldCheck className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                  VERIFIABLE MERKLE PROOFS
+                </span>
+                <span className="text-app-fg-dim">•</span>
               </div>
             </div>
           </div>
 
         </div>
       </section>
+
 
       {/* 2. FACTO 3-STEP INTERACTIVE ARCHITECTURE SECTION */}
       <section id="facto-how-it-works" className="mx-auto max-w-[1360px] px-4 sm:px-6 pt-16 sm:pt-24">
